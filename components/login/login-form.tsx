@@ -10,13 +10,34 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { FcGoogle } from "react-icons/fc";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { is } from "zod/v4/locales";
+import { Loader } from "lucide-react";
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-    const [submitting, setSubmitting] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  async function signInwithGoogle() {
+    startTransition(async () => {
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/",
+        fetchOptions: {
+          onSuccess: () => {
+            toast.success("Successfully signed in with Google");
+          },
+          onError: (error) => {
+            toast.error("Error signing in with Google");
+          },
+        },
+      });
+    });
+  }
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
@@ -48,7 +69,12 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" placeholder="Password" required />
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Password"
+                  required
+                />
               </Field>
               <Field>
                 <Button type="submit">Login</Button>
@@ -57,9 +83,24 @@ export function LoginForm({
                 Or continue with
               </FieldSeparator>
 
-              <Button variant="outline" type="button" className="w-full">
-              <FcGoogle  />
+              <Button
+                onClick={signInwithGoogle}
+                variant="outline"
+                type="button"
+                className="w-full cursor-pointer"
+                disabled={isPending}
+              >
+               {isPending ? (
+                <>
+                <Loader className="size-4 animate-spin" />
+                <span>Loading....</span>
+                </>
+               ) : (
+                <>
+                <FcGoogle />
                 Continue with Google
+                </>
+               )}
               </Button>
 
               <FieldDescription className="text-center">
