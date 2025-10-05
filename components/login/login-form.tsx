@@ -122,9 +122,7 @@ export function LoginForm({
                )}
               </Button>
 
-              <FieldDescription className="text-center">
-                Don&apos;t have an account? <a href="/register">Sign up</a>
-              </FieldDescription>
+              
             </FieldGroup>
           </form>
           <div className="bg-muted relative hidden md:block">
