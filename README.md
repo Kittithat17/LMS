@@ -5,6 +5,6 @@ pnpm dlx prisma init
 
 pnpm dlx prisma db push
 
-npx @better-auth/cli generate #create table
+npx @better-auth/cli generate #generate table
 
 pnpm add @t3-oss/env-nextjs zod
