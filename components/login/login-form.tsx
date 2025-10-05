@@ -14,7 +14,7 @@ import { useState, useTransition } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
-import { is } from "zod/v4/locales";
+
 import { Loader } from "lucide-react";
 export function LoginForm({
   className,
@@ -59,23 +59,7 @@ export function LoginForm({
                   required
                 />
               </Field>
-              <Field>
-                <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a
-                    href="#"
-                    className="ml-auto text-sm underline-offset-2 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Password"
-                  required
-                />
-              </Field>
+              
               <Field>
                 <Button type="submit">Login</Button>
               </Field>
@@ -104,7 +88,7 @@ export function LoginForm({
               </Button>
 
               <FieldDescription className="text-center">
-                Don&apos;t have an account? <a href="#">Sign up</a>
+                Don&apos;t have an account? <a href="/register">Sign up</a>
               </FieldDescription>
             </FieldGroup>
           </form>

@@ -8,3 +8,7 @@ pnpm dlx prisma db push
 npx @better-auth/cli generate #generate table
 
 pnpm add @t3-oss/env-nextjs zod
+
+
+_folder #private folder
+
