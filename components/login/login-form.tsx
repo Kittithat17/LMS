@@ -15,13 +15,16 @@ import { FcGoogle } from "react-icons/fc";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 
-import { Loader } from "lucide-react";
+import { Loader, Loader2, Send } from "lucide-react";
+import { useRouter } from "next/navigation";
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const [isPending, startTransition] = useTransition();
-
+  const [emailpending, startemailTran] = useTransition();
+  const [email, setEmail] = useState("");
+  const router = useRouter(); 
   async function signInwithGoogle() {
     startTransition(async () => {
       await authClient.signIn.social({
@@ -37,6 +40,24 @@ export function LoginForm({
         },
       });
     });
+  }
+
+  async function signInwithEmail(){
+    startemailTran(async()=>{
+      await authClient.emailOtp.sendVerificationOtp({
+        email: email,
+        type: "sign-in",
+        fetchOptions: {
+          onSuccess: () => {
+            toast.success("OTP sent to your email");
+            router.push(`/verify-otp?email=${email}`); // Redirect to OTP verification page
+          },
+          onError: (error) => {
+            toast.error("Error sending OTP");
+          },
+        }
+      });
+    }); 
   }
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -56,12 +77,26 @@ export function LoginForm({
                   id="email"
                   type="email"
                   placeholder="m@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </Field>
               
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit" onClick={signInwithEmail} disabled={emailpending} >
+                  {emailpending ? (
+                    <>
+                    <Loader2 className="size-4 animate-spin" />
+                    <span>Loading....</span>
+                    </>
+                   ) : (
+                    <>
+                    <Send className="size-4" />
+                    <span>Continue with Email</span>
+                    </>
+                   )}
+                </Button>
               </Field>
               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                 Or continue with
